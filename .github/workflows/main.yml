@@ -78,9 +78,8 @@ jobs:
     - name: Run JMeter Tests
       working-directory: jmeter-tests/apache-jmeter-5.6.3
       run: |
-        mkdir -p ../../execresults
         ./bin/jmeter -n \
-          -t ../tests/Practo\ Perfomance\ Testing.jmx \
+          -t ../tests/PractoPerfomanceTesting.jmx \
           -l ../../execresults/results.jtl
       continue-on-error: true
 
@@ -98,7 +97,7 @@ jobs:
       working-directory: jmeter-tests/apache-jmeter-5.6.3
       run: |
         ./bin/jmeter -g ../../execresults/results.jtl \
-          -o ../../execresults/html-report || echo "HTML generation failed"
+          -o ../../execresults || echo "HTML generation failed"
 
     - name: Debug HTML Report Directory
       working-directory: jmeter-tests/execresults
@@ -115,6 +114,6 @@ jobs:
       uses: actions/upload-artifact@v4
       with:
         name: jmeter-results
-        path: jmeter-tests/execresults/html-report/**
+        path: jmeter-tests/execresults
 
 

@@ -34,7 +34,7 @@ jobs:
       uses: actions/upload-artifact@v4
       with:
         name: extent-reports
-        path: java-selenium/test-output/ExtentReports
+        path: java-selenium/test-output/ExtentReport.html
 
     - name: Checkout Playwright/Axe Project
       uses: actions/checkout@v4
@@ -58,7 +58,7 @@ jobs:
       uses: actions/upload-artifact@v4
       with:
         name: playwright-report
-        path: playwright-axe/a11y-reports
+        path: playwright-axe/a11y-reports/*.html
 
     - name: Checkout JMeter Project
       uses: actions/checkout@v4
@@ -75,7 +75,7 @@ jobs:
       working-directory: jmeter-tests
       run: |
         mkdir -p execresults
-        jmeter -n -t "tests/Practo Perfomance Testing.jmx -l execresults/results.jtl -e -o execresults/html-report"
+        jmeter -n -t "tests/Practo Perfomance Testing.jmx" -l execresults/results.jtl -e -o execresults/html-report"
 
     - name: Upload JMeter Results
       uses: actions/upload-artifact@v4

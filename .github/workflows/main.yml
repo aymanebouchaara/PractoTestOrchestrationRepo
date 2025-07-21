@@ -75,7 +75,7 @@ jobs:
       working-directory: jmeter-tests
       run: |
         mkdir -p execresults
-        jmeter -n -t "tests/Practo Perfomance Testing.jmx" -l execresults/results.jtl -e -o execresults/html-report"
+        jmeter -n -t "tests/Practo Perfomance Testing.jmx" -l execresults/results.jtl -e -o execresults/html-report
 
     - name: Upload JMeter Results
       uses: actions/upload-artifact@v4

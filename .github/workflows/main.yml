@@ -60,7 +60,7 @@ jobs:
         name: playwright-report
         path: playwright-axe/a11y-reports/*.html
 
-        - name: Checkout Performance Testing
+    - name: Checkout Performance Testing
       uses: actions/checkout@v4
       with:
         repository: aymanebouchaara/PractoPerformanceTesting

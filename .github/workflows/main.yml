@@ -69,15 +69,17 @@ jobs:
     - name: Run JMeter Tests
       uses: rbhadti94/apache-jmeter-action@v0.7.0
       with:
-        testFilePath: PerformanceTesting/tests/
-        outputReportsFolder: PerformanceTesting/execresults/html
+        testFilePath: tests/PractoPerfomanceTesting.jmx
+        outputReportsFolder: execresults
         args: "-e"
+      working-directory: PerformanceTesting
 
     - name: Upload JMeter Artifacts
       uses: actions/upload-artifact@v4
       with:
         name: jmeter-results
-        path: PerformanceTesting/execresults/html
+        path: PerformanceTesting/execresults
+
 
 
 

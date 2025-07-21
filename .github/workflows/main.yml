@@ -60,60 +60,35 @@ jobs:
         name: playwright-report
         path: playwright-axe/a11y-reports/*.html
 
-    - name: Checkout JMeter Project
+        - name: Checkout Performance Testing
       uses: actions/checkout@v4
       with:
-        repository: aymanebouchaara/PractoPerformanceTesting
-        path: jmeter-tests
+        path: PerformanceTesting
 
-    - name: Install JMeter manually
-      working-directory: jmeter-tests
+    - name: Set up Java
+      uses: actions/setup-java@v4
+      with:
+        distribution: 'temurin'
+        java-version: '17'
+
+    - name: Install JMeter
       run: |
-        sudo apt-get remove -y jmeter
         sudo apt-get update
-        sudo apt-get install -y openjdk-17-jdk wget
-        wget https://archive.apache.org/dist/jmeter/binaries/apache-jmeter-5.6.3.tgz
-        tar xzf apache-jmeter-5.6.3.tgz
+        wget https://downloads.apache.org/jmeter/binaries/apache-jmeter-5.6.3.tgz
+        tar -xzf apache-jmeter-5.6.3.tgz
 
     - name: Run JMeter Tests
-      working-directory: jmeter-tests/apache-jmeter-5.6.3
       run: |
-        ./bin/jmeter -n \
-          -t ../tests/PractoPerfomanceTesting.jmx \
-          -l ../../execresults/results.jtl
-      continue-on-error: true
+        ./apache-jmeter-5.6.3/bin/jmeter \
+          -n -t PerformanceTesting/tests/PractoPerfomanceTesting.jmx \
+          -l PerformanceTesting/execresults/results.jtl \
+          -e -o PerformanceTesting/execresults/html
 
-    - name: Debug JMeter Results File
-      working-directory: jmeter-tests/execresults
-      run: |
-        if [ -f results.jtl ]; then
-          echo "results.jtl exists:"
-          cat results.jtl
-        else
-          echo "results.jtl not found!"
-        fi
-
-    - name: Generate HTML Dashboard
-      working-directory: jmeter-tests/apache-jmeter-5.6.3
-      run: |
-        ./bin/jmeter -g ../../execresults/results.jtl \
-          -o ../../execresults || echo "HTML generation failed"
-
-    - name: Debug HTML Report Directory
-      working-directory: jmeter-tests/execresults
-      run: |
-        if [ -d html-report ]; then
-          echo "HTML report directory exists:"
-          ls -R html-report
-        else
-          echo "HTML report directory not found!"
-        fi
-
-    - name: Upload JMeter Results
-      if: always()
+    - name: Upload JMeter Report
       uses: actions/upload-artifact@v4
       with:
         name: jmeter-results
-        path: jmeter-tests/execresults
+        path: PerformanceTesting/execresults
+
 
 

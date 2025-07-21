@@ -66,25 +66,29 @@ jobs:
         repository: aymanebouchaara/PractoPerformanceTesting
         path: jmeter-tests
 
-    - name: Install JMeter
-      run: |
-        sudo apt-get update
-        sudo apt-get install -y jmeter
-
-    - name: Run JMeter Tests
+    - name: Install JMeter manually
       working-directory: jmeter-tests
       run: |
-        mkdir -p execresults
-        jmeter -n \
-          -t "tests/Practo Perfomance Testing.jmx" \
-          -l execresults/results.jtl
+        sudo apt-get remove -y jmeter
+        sudo apt-get update
+        sudo apt-get install -y openjdk-17-jdk wget
+        wget https://archive.apache.org/dist/jmeter/binaries/apache-jmeter-5.6.3.tgz
+        tar xzf apache-jmeter-5.6.3.tgz
+
+    - name: Run JMeter Tests
+      working-directory: jmeter-tests/apache-jmeter-5.6.3
+      run: |
+        mkdir -p ../../execresults
+        ./bin/jmeter -n \
+          -t ../tests/Practo\ Perfomance\ Testing.jmx \
+          -l ../../execresults/results.jtl
       continue-on-error: true
 
     - name: Generate HTML Dashboard
-      working-directory: jmeter-tests
+      working-directory: jmeter-tests/apache-jmeter-5.6.3
       run: |
-        jmeter -g execresults/results.jtl \
-          -o execresults/html-report
+        ./bin/jmeter -g ../../execresults/results.jtl \
+          -o ../../execresults/html-report
 
     - name: Upload JMeter Results
       if: always()
@@ -92,4 +96,5 @@ jobs:
       with:
         name: jmeter-results
         path: jmeter-tests/execresults/html-report/**
+
 

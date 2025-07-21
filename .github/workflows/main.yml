@@ -60,18 +60,25 @@ jobs:
         name: playwright-report
         path: playwright-axe/a11y-reports/*.html
 
-    - name: Checkout Performance Testing
+        - name: Checkout Performance Testing
       uses: actions/checkout@v4
       with:
         repository: aymanebouchaara/PractoPerformanceTesting
         path: PerformanceTesting
 
+    - name: Install JMeter
+      run: |
+        sudo apt-get update
+        wget https://downloads.apache.org/jmeter/binaries/apache-jmeter-5.6.3.tgz
+        tar -xzf apache-jmeter-5.6.3.tgz
+      working-directory: PerformanceTesting
+
     - name: Run JMeter Tests
-      uses: rbhadti94/apache-jmeter-action@v0.7.0
-      with:
-        testFilePath: tests/PractoPerfomanceTesting.jmx
-        outputReportsFolder: execresults
-        args: "-e"
+      run: |
+        ./apache-jmeter-5.6.3/bin/jmeter \
+          -n -t tests/PractoPerfomanceTesting.jmx \
+          -l execresults/results.jtl \
+          -e -o execresults/html
       working-directory: PerformanceTesting
 
     - name: Upload JMeter Artifacts
@@ -79,6 +86,7 @@ jobs:
       with:
         name: jmeter-results
         path: PerformanceTesting/execresults
+
 
 
 

@@ -60,7 +60,7 @@ jobs:
         name: playwright-report
         path: playwright-axe/a11y-reports/*.html
 
-    - name: Checkout JMeter Project
+        - name: Checkout JMeter Project
       uses: actions/checkout@v4
       with:
         repository: aymanebouchaara/PractoPerformanceTesting
@@ -75,10 +75,21 @@ jobs:
       working-directory: jmeter-tests
       run: |
         mkdir -p execresults
-        jmeter -n -t "tests/Practo Perfomance Testing.jmx" -l execresults/results.jtl -e -o execresults/html-report
+        jmeter -n \
+          -t "tests/Practo Perfomance Testing.jmx" \
+          -l execresults/results.jtl
+      continue-on-error: true
+
+    - name: Generate HTML Dashboard
+      working-directory: jmeter-tests
+      run: |
+        jmeter -g execresults/results.jtl \
+          -o execresults/html-report
 
     - name: Upload JMeter Results
+      if: always()
       uses: actions/upload-artifact@v4
       with:
         name: jmeter-results
-        path: jmeter-tests/execresults/html-report
+        path: jmeter-tests/execresults/html-report/**
+

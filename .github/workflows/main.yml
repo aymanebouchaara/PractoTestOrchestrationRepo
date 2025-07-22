@@ -16,6 +16,7 @@ jobs:
       uses: actions/checkout@v4
       with:
         repository: aymanebouchaara/PractoTestFramework
+        token: ${{ secrets.GH_PAT }}
         path: java-selenium
 
     - name: Set up Java
